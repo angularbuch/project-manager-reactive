@@ -7,6 +7,7 @@ import { SOCKET_IO } from '../../app.tokens';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
 import { Action } from '../stores/action';
+import { io, Socket} from 'socket.io-client';
 
 const BASE_URL = `http://localhost:3000/api/tasks/`;
 
@@ -17,13 +18,13 @@ const WEB_SOCKET_URL = 'http://localhost:3001';
 })
 export class TaskService {
 
-  socket: SocketIOClient.Socket;
+  socket: Socket
 
   tasksChanged = new BehaviorSubject({});
 
   constructor(private http: HttpClient,
     private taskStore: TaskStore,
-    @Inject(SOCKET_IO) socketIO: SocketIOClientStatic) {
+    @Inject(SOCKET_IO) socketIO: (url: string) => Socket) {
 
     this.socket = socketIO(WEB_SOCKET_URL);
     fromEvent<Action>(this.socket, 'task_saved')

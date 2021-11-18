@@ -1,3 +1,4 @@
+import { Socket } from 'socket.io-client';
 import { Action } from '../services/stores/action';
 
 export class MockSocket {

@@ -29,14 +29,6 @@
       "assignee": {},
       "id": 5,
       "state": "BACKLOG"
-    },
-    {
-      "assignee": {},
-      "tags": [],
-      "state": "IN_PROGRESS",
-      "title": "New Task 1636655290635",
-      "description": "This is a test task",
-      "id": 6
     }
   ]
 }
