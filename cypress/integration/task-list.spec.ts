@@ -26,7 +26,7 @@ describe('Task-List', () => {
     });
   });
 
-it.only('should allow searching for tasks (advanced)', () => {
+it('should allow searching for tasks (advanced)', () => {
 
   cy.intercept('GET', '**/api/tasks/**', (request) => {
     delete request.headers['if-none-match'];
@@ -34,7 +34,7 @@ it.only('should allow searching for tasks (advanced)', () => {
 
   const searchTerm = 'Ersten Prototyp';
   cy.get('#search-tasks').type(searchTerm).then((e) => {
-    debugger;
+    //debugger;
   } );
 
   cy.wait('@search')
@@ -80,7 +80,7 @@ it.only('should allow searching for tasks (advanced)', () => {
   it('should display a message when the list is empty', () => {
     cy.intercept('**/api/tasks/**', []);
     cy.visit('tasks');
-    cy.get('.task-list').should('contain', 'Keine Aufgaben vorhanden');
+    cy.get('.task-list').should('contain', 'Keine Aufgaben vorhanden').then(() => cy.pause());
   });
 
   it('should display the title of a task in the list', () => {
