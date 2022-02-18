@@ -1,3 +1,5 @@
+import {Task} from "../../models/model-interfaces";
+
 export const LOAD = 'LOAD';
 export const ADD = 'ADD';
 export const EDIT = 'EDIT';

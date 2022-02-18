@@ -17,7 +17,7 @@ export class TaskListComponent implements OnInit {
 
   selectedTaskId: string | number | null = null;
 
-  tasks$!: Observable<Task[]>;
+  tasks$!: Observable<any>;
 
   destroyed$ = new Subject<void>();
 
@@ -30,29 +30,33 @@ export class TaskListComponent implements OnInit {
   }
 
   ngOnInit() {
-    /*
-        this.tasks$ = this.searchTerm.valueChanges.pipe(
-          debounceTime(400),
-          mergeMap(query => this.taskService.findTasks(query)),
-          tap(tasks => console.log('Tasks:', tasks)));
-    */
-    this.tasks$ = this.taskService.selectTasks().pipe(
-      takeUntil(this.destroyed$)
-    );
+      this.tasks$ = this.searchTerm.valueChanges.pipe(
+        debounceTime(400),
+        mergeMap(query => this.taskService.findTasks(query)),
+        tap(tasks => console.log('Tasks:', tasks)));
 
-    const paramsStream = this.route.queryParams
-      .pipe(
+      const paramsStream$ = this.route.queryParams.pipe(
         map(params => decodeURI(params['query'] ?? '')),
         tap(query => this.searchTerm.setValue(query)));
 
-    const searchTermStream = this.searchTerm.valueChanges.pipe(
-      debounceTime(400),
-      tap(query => this.adjustBrowserUrl(query)));
+      const searchTermStream$ = this.searchTerm.valueChanges.pipe(
+        debounceTime(400),
+        tap(query => this.adjustBrowserUrl(query)));
 
-    merge(paramsStream, searchTermStream).pipe(
-      distinctUntilChanged(),
-      switchMap(query => this.taskService.findTasks(query)))
-      .subscribe();
+      this.tasks$ = merge(
+        paramsStream$,
+        searchTermStream$,
+        this.taskService.taskSaved$
+      ).pipe(
+        distinctUntilChanged(),
+        switchMap(() => this.taskService.findTasks(this.searchTerm.value))
+      );
+    /*
+    this.tasks$ = this.taskService.selectTasks().pipe(
+      takeUntil(this.destroyed$)
+    );
+    */
+          
   }
 
   ngOnDestroy() {

@@ -8,7 +8,7 @@ describe('EMail-Validator', () => {
   });
 
   it('should accept valid email addresses', () => {
-    const control = <any> {value: 'foo@bar.com'};
+    const control = <any> {value: 'foo@mycompany.com'};
     const result = validator.validate(control);
     expect(result).toBe(null);
   });
@@ -22,5 +22,5 @@ describe('EMail-Validator', () => {
     const result = validator.validate(control);
     expect(result).toBeNull();
   });
-  
+
 });

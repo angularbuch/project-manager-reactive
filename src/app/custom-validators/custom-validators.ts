@@ -61,7 +61,7 @@ export class IfNotBacklogThanAssigneeValidatorDirective {
 })
 export class EmailValidatorDirective {
   validate(control: AbstractControl): ValidationErrors | null {
-    const re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+    const re = /^[A-Za-z0-9._%+-]+@mycompany.com$/i;
     if (!control.value || control.value === '' || re.test(control.value)) {
       return null;
     } else {

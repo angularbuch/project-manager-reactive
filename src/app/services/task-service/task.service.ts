@@ -9,7 +9,7 @@ import { tap } from 'rxjs/operators';
 import { Action } from '../stores/action';
 import { io, Socket} from 'socket.io-client';
 
-const BASE_URL = `http://localhost:3000/api/tasks/`;
+const BASE_URL = `http://localhost:3000/api/tasks`;
 
 const WEB_SOCKET_URL = 'http://localhost:3001';
 
@@ -20,7 +20,7 @@ export class TaskService {
 
   socket: Socket
 
-  tasksChanged = new BehaviorSubject({});
+  taskSaved$ = new BehaviorSubject({});
 
   constructor(private http: HttpClient,
     private taskStore: TaskStore,
@@ -52,17 +52,17 @@ export class TaskService {
   }
 
   getTask(id: number | string): Observable<Task> {
-    return this.http.get<Task>(BASE_URL + id);
+    return this.http.get<Task>(`${BASE_URL}/${id}`);
   }
 
 
   saveTask(task: Task): Observable<Task> {
     const method = task.id ? 'PUT' : 'POST';
-    return this.http.request<Task>(method, BASE_URL + (task.id || ''), {
+    return this.http.request<Task>(method, `${BASE_URL}/${task.id ?? ''}`, {
       body: task
     }).pipe(
       tap(savedTask => {
-        this.tasksChanged.next(savedTask);
+        this.taskSaved$.next(savedTask);
         const actionType: ActionType = task.id ? EDIT : ADD;
         const action = {type: actionType, data: savedTask};
         this.taskStore.dispatch(action);
@@ -71,7 +71,7 @@ export class TaskService {
   }
 
   deleteTask(task: Task) {
-    return this.http.delete(BASE_URL + task.id).pipe(
+    return this.http.delete(`${BASE_URL}/${task.id}`).pipe(
       tap(() => {
         this.taskStore.dispatch({type: REMOVE, data: task});
       }));
